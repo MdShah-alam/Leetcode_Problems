@@ -24,27 +24,39 @@ void print(Node* root)
     print(root->right);
 }
 
-bool getpath(Node* root , int b, vector<int>&ar)
+void getpath(Node* root , vector<string>v , vector<vector<string>>&ar)
 {
-    if(!root) return false;
-    ar.push_back(root->val);
-
-    if(root->val == b){
-        return true;
+    if(!root){
+        return ;
     }
-    if(getpath(root->left , b, ar)||getpath(root->right,b,ar))
-        return true;
+    bool found=true;
 
-    ar.pop_back();
-    return false;
+    if(root->left==NULL && root->right==NULL){
+        v.push_back(to_string(root->val));
+        ar.push_back(v);
+        found=false;
+    }
+
+    if(found){
+        string s=to_string(root->val);
+        s = s+"->";
+        v.push_back(s);
+    }
+
+    getpath(root->left , v, ar);
+    getpath(root->right, v , ar);
+
+    v.pop_back();
+    return ;
 }
 
-vector<int> solve(Node *root,int b)
+vector<vector<string>> solve(Node *root)
 {
-    vector<int>ar;
+    vector<vector<string>>ar;
+    vector<string>v;
     if(root==NULL)
         return ar;
-    getpath(root,b,ar);
+    getpath(root,v, ar);
     return ar;
 }
 
@@ -74,14 +86,15 @@ int main()
     }
 
     print(root);
+    cout<<endl;
 
-    int k;
-    cout<<endl<<"Enter a value: ";
-    cin>>k;
+    vector<vector<string>>v = solve(root);
 
-    vector<int>v = solve(root,k);
-    for(int i=0;i<v.size();i++){
-        cout<<v[i]<<" ";
+    for(int j=0 ;j<v.size(); j++){
+        for(int i=0;i<v[j].size();i++){
+            cout<<v[j][i];
+        }
+        cout<<endl;
     }
     return 0;
 }
@@ -89,8 +102,7 @@ int main()
 
 1
 2 3
--1 4 5 6
--1 8 -1 -1 -1 7
--1 -1 -1 -1
+4 5 6 7
+-1 -1 -1 -1 -1 -1 -1 -1
 
 */
