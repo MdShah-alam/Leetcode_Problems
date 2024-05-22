@@ -1,19 +1,22 @@
 #include<bits/stdc++.h>
 using namespace std;
-vector<vector<int>>subsets;
 
-void generat(vector<int>&subset,int i, vector<int>&nums)
+vector<vector<int>> subsets(vector<int>& v)
 {
-    if(i==nums.size()){
-        subsets.push_back(subset);
-        return ;
+    sort(v.begin(),v.end());
+    vector<vector<int>>vv;
+    int n=v.size();
+    for(int i=0;i<(1<<n);i++){
+        vector<int>k;
+        for(int j=0;j<n;j++){
+            if((1<<j)&i)
+                k.push_back(v[j]);
+        }
+        if (find(vv.begin(), vv.end(), k) == vv.end() )
+            vv.push_back(k);
     }
 
-    generat(subset,i+1,nums);
-
-    subset.push_back(nums[i]);
-    generat(subset,i+1,nums);
-    subset.pop_back();
+    return vv;
 }
 
 int main()
@@ -26,13 +29,13 @@ int main()
         cin>>a;
         v.push_back(a);
     }
-    vector<int>a;
-    generat(a,0,v);
+    vector<vector<int>> vv = subsets(v);
 
-    for(int i=0;i<subsets.size();i++){
-        for(int j=0;j<subsets[i].size();j++)
-            cout<<subsets[i][j]<<" ";
+    for(int i=0;i<vv.size();i++){
+        for(int j=0;j<vv[i].size();j++)
+            cout<<vv[i][j]<<" ";
         cout<<endl;
     }
+
     return 0;
 }
