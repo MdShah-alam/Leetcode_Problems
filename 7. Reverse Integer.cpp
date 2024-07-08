@@ -3,19 +3,24 @@ using namespace std;
 
 int reverse(int x)
 {
-    int a=0,b=0;
+    int d=0 , m=0;
     while(x){
-        a=x%10;
-        b=b*10+a;
+        d=x%10;
+        if(m>INT_MAX/10 || m<INT_MIN)
+            return 0;
+        m=m*10+d;
         x=x/10;
     }
-    return (b < INT_MIN || b > INT_MAX) ? b : 0;
+    return m;
 }
 
 int main()
 {
-    int n;
-    cin>>n;
-    cout<<reverse(n)<<endl;
+    int x;
+    cin>>x;
+    cout<<reverse(x)<<endl;
+    cout<<INT_MAX<<endl<<INT_MIN<<endl;
     return 0;
 }
+
+////  -2147483412
