@@ -22,34 +22,15 @@ void print(TreeNode *root)
     print(root->left);
     print(root->right);
 }
-
-vector<int> store(TreeNode *root , vector<int>&v)
-{
-    if(root==NULL) return v;
-    v.push_back(root->val);
-    store(root->left,v);
-    store(root->right,v);
-
-    return v;
-}
-
+TreeNode *prev=NULL;
 void flatten(TreeNode* root)
 {
-    vector<int>v;
-    v = store(root,v);
-    cout<<v.size()<<endl;
-    TreeNode *rot=new TreeNode(v[0]);
-    queue<TreeNode*>q;
-    q.push(rot);
-    int i=1;
-    for(int i=1;i<v.size();i++){
-        TreeNode *node=q.front();
-        q.pop();
-        TreeNode *newNode=new TreeNode(v[i]);
-        node->right=newNode;
-        q.push(newNode);
-    }
-    print(rot);
+    if(root==NULL) return;
+    flatten(root->right);
+    flatten(root->left);
+    root->right=prev;
+    root->left=NULL;
+    prev=root;
 }
 
 int main()
@@ -60,7 +41,8 @@ int main()
     queue<TreeNode*>q;
     q.push(root);
 
-    while(!q.empty()){
+    while(!q.empty())
+    {
         TreeNode *node=q.front();
         q.pop();
         int x,y;
