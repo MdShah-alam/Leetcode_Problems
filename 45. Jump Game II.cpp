@@ -1,23 +1,20 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int jump(vector<int>& nums) {
-    int fasther=0;
-    int currposition=0;
-    int jumps=0;
-    int n = nums.size();
+int jump(vector<int>& v)
+{
+    int n = v.size();
+    int jump=0, currEnd =0 , currFarthest =0;
     for(int i=0;i<n-1;i++){
-        fasther = max(fasther,i+nums[i]);
-        if(i==currposition){
-            currposition=fasther;
-            jumps++;
+        currFarthest = max(currFarthest , i+v[i]);
+        if(currEnd==i){
+            currEnd=currFarthest;
+            jump++;
         }
     }
-    return jumps;
+    return jump;
 }
-//  3 2 1 0 4
-//  2 3 1 1 4
-//  2 3 0 1 4
+
 int main()
 {
     int n;
@@ -28,4 +25,12 @@ int main()
     cout<<jump(v)<<endl;
     return 0;
 }
+/**
 
+5
+2 3 1 1 4
+
+5
+3 2 1 0 4
+
+*/
