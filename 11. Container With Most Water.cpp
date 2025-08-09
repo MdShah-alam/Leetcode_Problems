@@ -1,37 +1,36 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int maxArea(vector<int>& height)
+int maxArea(vector<int>&v)
 {
-    int n = height.size();
-    int l=0;
-    int r=n-1;
-    int a=0;
+    int n=v.size();
+    int l=0,r=n-1,ans=0;
     while(l<r){
-        int b=height[l];
-        int c=height[r];
-        int d=r-l;
-        int e=min(b,c);
-        int f=e*d;
-        a=max(a,f);
-        if(e==b)
+        int k = min(v[l],v[r]);
+        ans = max(ans, (r-l)*k);
+        if(v[l]<v[r])
             l++;
         else
             r--;
     }
-    return a;
+    return ans;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    vector<int>v;
-    for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        v.push_back(a);
-    }
+    vector<int>v(n);
+
+    for(int i=0;i<n;i++)
+        cin>>v[i];
+
     cout<<maxArea(v)<<endl;
     return 0;
 }
+/**
+
+9
+1 8 6 2 5 4 8 3 7
+
+*/

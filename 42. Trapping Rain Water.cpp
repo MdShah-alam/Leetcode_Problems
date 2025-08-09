@@ -3,60 +3,64 @@ using namespace std;
 
 int trap(vector<int>& v)
 {
-    vector<int>l;
-    vector<int>r;
     int n = v.size();
-    l.push_back(v[0]);
-    int b=v[0];
+    vector<int>prefix(n),suffix(n);
+    prefix[0]=v[0];
+    suffix[n-1]=v[n-1];
 
-    for(int i=1;i<n;i++){
-        if(b<v[i]){
-            b=v[i];
-            l.push_back(b);
-        }
-        else
-            l.push_back(b);
-    }
+    for(int i=1;i<n;i++)
+        prefix[i] = max(prefix[i-1],v[i]);
+    for(int i=n-2;i>=0;i--)
+        suffix[i]=max(suffix[i+1],v[i]);
 
-    reverse(v.begin(),v.end());
-    r.push_back(v[0]);
-    b=v[0];
-
-    for(int i=1;i<n;i++){
-        if(b<v[i]){
-            b=v[i];
-            r.push_back(b);
-        }
-        else
-            r.push_back(b);
-    }
-    reverse(r.begin(),r.end());
-    reverse(v.begin(),v.end());
-
-    int result=0;
+    int total=0;
     for(int i=0;i<n;i++){
-        int m=min(l[i],r[i]);
-        m=m-v[i];
-        result+=m;
+        int left = prefix[i];
+        int right = suffix[i];
+        if(v[i]<left && v[i]<right)
+            total+=min(left,right)-v[i];
     }
-    return result;
+    return total;
+}
+
+int updateTrap(vector<int>&v)
+{
+    int n=v.size();
+    int l=0,r=n-1,left=0, right=0, total=0;
+    while(l<=r){
+        if(v[l]>v[r]){
+            if(right>v[r])
+                total+=(right-v[r]);
+            right=max(right,v[r]);
+            r--;
+        }
+        else{
+            if(left>v[l])
+                total+=(left-v[l]);
+            left = max(left, v[l]);
+            l++;
+        }
+    }
+    return total;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    vector<int>v;
-    for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        v.push_back(a);
-    }
-
+    vector<int>v(n);
+    for(int i=0;i<n;i++)
+        cin>>v[i];
     cout<<trap(v)<<endl;
+    cout<<updateTrap(v)<<endl;
     return 0;
 }
 /**
+
 12
-0 1 0 2 1 0 1 3 2 1 2 1
+0 1 0 2 1 0 2 3 2 1 2 1
+
+6
+4 2 0 3 2 5
+
 */
