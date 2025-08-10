@@ -1,119 +1,109 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node
+class ListNode
 {
 public:
     int val;
-    Node * next;
-
-    Node (int val)
+    ListNode *next;
+    ListNode(int val)
     {
         this->val = val;
-        next = NULL;
+        this->next = nullptr;
     }
 };
 
-Node * insert_at_tail(int val , Node *&head)
+ListNode *insert_at_tail(ListNode *head, int val)
 {
-    Node * newnode = new Node(val);
-    if(head == NULL)
-        return head = newnode;
-    Node *temp = head;
+    ListNode *newNode = new ListNode(val);
+    if(head==nullptr) return newNode;
 
-    while(temp->next!=NULL)
+    ListNode *temp = head;
+
+    while(temp->next!=nullptr)
         temp=temp->next;
 
-    temp->next = newnode;
+    temp->next=newNode;
     return head;
 }
 
-void printList(Node * head)
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
 {
-    Node * temp = head;
-    while(temp!=NULL){
-        cout<<temp->val<<" ";
-        temp=temp->next;
+    ListNode *head=nullptr;
+    int n=0;
+    while(l1!=nullptr && l2!=nullptr){
+        n = n + l1->val+l2->val;
+        l1=l1->next;
+        l2=l2->next;
+        int m = n%10;
+        n=n/10;
+        head = insert_at_tail(head, m);
     }
-    cout<<endl;
+    while(l1!=nullptr){
+        n = n + l1->val;
+        l1 = l1->next;
+        int m = n%10;
+        n=n/10;
+        head = insert_at_tail(head, m);
+    }
+
+    while(l2!=nullptr){
+        n = n + l2->val;
+        l2=l2->next;
+        int m = n%10;
+        n=n/10;
+        head = insert_at_tail(head, m);
+    }
+    while(n){
+        head = insert_at_tail(head , n%10);
+        n = n / 10;
+    }
+    return head;
 }
 
-void create_list(Node * head1 , Node * head2)
+void print(ListNode *head)
 {
-    Node *temp1,*temp2;
-    temp1=head1;
-    temp2=head2;
-    int n=0,m=0;
-    while(temp1!=NULL){
-        temp1=temp1->next;
-        n++;
+    ListNode *temp = head;
+    while(temp!=nullptr){
+        cout<<temp->val<<" ";
+        temp = temp->next;
     }
-    while(temp2!=NULL){
-        temp2=temp2->next;
-        m++;
-    }
-    Node *head=NULL;
-    int a=0,b=0,c=0;
-    while(n!=0 && m!=0){
-        c = head1->val+head2->val + b;
-        head1 = head1->next;
-        head2 = head2->next;
-        a = c%10;
-        b = c/10;
-        head = insert_at_tail(a , head);
-        m--;
-        n--;
-    }
-    if(n!=0){
-        while(n!=0){
-            c = head1->val + b;
-            head1=head1->next;
-            a = c%10;
-            b= c/10;
-            head = insert_at_tail(a,head);
-            n--;
-        }
-    }
-    if(m!=0){
-        while(m!=0){
-            c = head2->val + b;
-            head2 = head2->next;
-            a = c % 10;
-            b = c / 10;
-            head = insert_at_tail(a , head);
-            m--;
-        }
-    }
-    if(b!=0)
-        head = insert_at_tail(b, head);
-    printList(head);
 }
 
 int main()
 {
     int n,m;
-    cout<<"Enter size of n : ";
-    cin>>n;
-    cout<<"Enter size of m : ";
-    cin>>m;
+    cin>>n>>m;
+    ListNode *l1=nullptr, *l2=nullptr;
 
-    Node *head1=NULL;
-    cout<<"Enter first list : ";
     for(int i=0;i<n;i++){
         int a;
         cin>>a;
-        head1 = insert_at_tail(a,head1);
+        l1=insert_at_tail(l1,a);
     }
-   // printList(head1);
-    cout<<"Enter second list : ";
-    Node *head2=NULL;
+
     for(int i=0;i<m;i++){
         int a;
         cin>>a;
-        head2 = insert_at_tail(a,head2);
+        l2=insert_at_tail(l2,a);
     }
-    //printList(head2);
-    cout<<"Add list is : ";
-    create_list(head1,head2);
 
+    print(l1);
+    cout<<endl;
+    print(l2);
+    cout<<endl;
+
+    ListNode *head = addTwoNumbers(l1,l2);
+    print(head);
+    cout<<endl;
+
+    return 0;
 }
+
+/**
+
+3 4
+2 4 9
+5 6 4 9
+
+*/

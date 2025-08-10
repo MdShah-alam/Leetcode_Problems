@@ -1,79 +1,82 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node
+class ListNode
 {
 public:
     int val;
-    Node *next;
-    Node(int data)
+    ListNode *next;
+    ListNode(int val)
     {
-        this->val=data;
-        this->next=NULL;
+        this->val = val;
+        this->next = nullptr;
     }
 };
 
-Node *insert_at_tail(Node *&head , int a)
+ListNode *insert_at_tail(ListNode *head, int val)
 {
-    if(head==NULL) return head = new Node(a);
-
-    Node *temp=head;
-    while(temp->next!=NULL){
-        temp = temp->next;
-    }
-    temp->next = new Node(a);
+    ListNode *newNode = new ListNode(val);
+    if(head == nullptr) return newNode;
+    ListNode *temp = head;
+    while(temp->next!=nullptr)
+        temp=temp->next;
+    temp->next = newNode;
     return head;
 }
 
-void print(Node *head)
+void print(ListNode *head)
 {
-    Node *temp = head;
-    while(temp!=NULL){
+    ListNode *temp=head;
+    while(temp){
         cout<<temp->val<<" ";
-        temp=temp->next;
+        temp = temp->next;
     }
+    cout<<endl;
 }
 
-Node *deleteDuplicates(Node *head)
+ListNode* deleteDuplicates(ListNode* head)
 {
-    if(head==NULL || head->next==NULL) return head;
-    Node* pseudo=new Node(0);
-    pseudo->next=head;
-    Node *itr=pseudo;
+    if(head==nullptr) return head;
+    unordered_map<int,int>mp;
+    ListNode *temp = head;
 
-    while(itr->next && itr->next->next){
-        if(itr->next->val == itr->next->next->val){
-            int variable = itr->next->val;
-            while(itr->next!=NULL && itr->next->val==variable)
-                itr->next=itr->next->next;
-        }
-        else
-            itr=itr->next;
+    while(temp){
+        mp[temp->val]++;
+        temp = temp->next;
     }
-    return pseudo->next;
+
+    ListNode dummy(0);
+    ListNode *prev = nullptr;
+    dummy.next = head;
+    prev = &dummy;
+    temp = head;
+
+    while(temp){
+        if(mp[temp->val]>1){
+            prev->next = temp->next;
+            delete(temp);
+            temp = prev->next;
+        }
+        else{
+            prev = temp;
+            temp = temp->next;
+        }
+    }
+    return dummy.next;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    Node *head = NULL;
+    ListNode *head = nullptr;
     for(int i=0;i<n;i++){
         int a;
         cin>>a;
-        head = insert_at_tail(head,a);
+        head = insert_at_tail(head, a);
     }
     print(head);
-    cout<<endl;
-
-    Node *temp = deleteDuplicates(head);
-    print(temp);
-
+    head = deleteDuplicates(head);
+    print(head);
     return 0;
-}/**
-
-7
-1 2 3 3 4 4 5
-
-*/
-
+}

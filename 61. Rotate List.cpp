@@ -1,89 +1,81 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node
+class ListNode
 {
 public:
     int val;
-    Node * next;
-
-    Node(int val)
+    ListNode *next;
+    ListNode(int val)
     {
-        this->val=val;
-        next=NULL;
+        this->val = val;
+        this->next = nullptr;
     }
 };
 
-Node * insert_at_tail(Node *&head , int val)
+ListNode *insert_at_tail(ListNode *head, int val)
 {
-    Node *newNode=new Node(val);
-    if(head==NULL){
-        head=newNode;
-        return head;
-    }
-
-    Node *temp=head;
-    while(temp->next!=NULL){
+    ListNode *newNode = new ListNode(val);
+    if(head == nullptr) return newNode;
+    ListNode *temp = head;
+    while(temp->next!=nullptr)
         temp=temp->next;
-    }
-    temp->next=newNode;
+    temp->next = newNode;
     return head;
 }
 
-Node * Rotation(Node *&head , int k)
+void print(ListNode *head)
 {
-
-    if(head==NULL || head->next==NULL)
-        return head;
-
-    Node *newH,*tail;
-    newH=head;
-    tail=head;
-    int l=1;
-    while(tail->next!=NULL){
-        l++;
-        tail=tail->next;
+    ListNode *temp=head;
+    while(temp){
+        cout<<temp->val<<" ";
+        temp = temp->next;
     }
-
-    tail->next=head;
-    k=k%l;
-    for(int i=0;i<l-k;i++){
-        tail=tail->next;
-    }
-    newH=tail->next;
-    tail->next=NULL;
-    return newH;
+    cout<<endl;
 }
 
-void printList(Node * head)
+ListNode* rotateRight(ListNode* head, int k)
 {
-    Node * temp=head;
-    while(temp!=NULL){
-        cout<<temp->val<<" ";
-        temp=temp->next;
+    if(!head || !head->next || k==0) return head;
+    int n=1;
+    ListNode *tail = head;
+
+    while(tail->next){
+        tail = tail->next;
+        n++;
     }
 
+    k%=n;
+    if(k==0) return head;
+    tail->next = head;
+    ListNode *new_tail = head;
+
+    for(int i=0;i<n-k-1;i++){
+        new_tail = new_tail->next;
+    }
+
+    ListNode *new_head = new_tail->next;
+    new_tail->next = nullptr;
+    return new_head;
 }
 
 int main()
 {
-    Node *head=NULL;
     int n;
     cin>>n;
+    ListNode *head = nullptr;
+
     for(int i=0;i<n;i++){
         int a;
         cin>>a;
-        head = insert_at_tail(head,a);
+        head = insert_at_tail(head, a);
     }
-    printList(head);
-    cout<<endl;
+    print(head);
 
     int k;
-    cout<<"Enter the rotation of List : ";
-
     cin>>k;
-    head=Rotation(head,k);
-    printList(head);
-    cout<<endl;
+    head = rotateRight(head, k);
+    print(head);
+
     return 0;
 }
