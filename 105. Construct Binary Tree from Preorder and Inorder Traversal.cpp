@@ -5,109 +5,74 @@ class TreeNode
 {
 public:
     int val;
-    TreeNode * left=NULL;
-    TreeNode * right=NULL;
+    TreeNode *left;
+    TreeNode *right;
     TreeNode(int val)
     {
         this->val = val;
-        this->left = NULL;
-        this->right = NULL;
+        this->left = nullptr;
+        this->right = nullptr;
     }
 };
 
-//TreeNode *build(vector<int>&preorder,int preStart , int preEnd, vector<int>& inorder , int inStart , int inEnd , map<int,int>inMap)
-//{
-//    if(preStart>preEnd || inStart>inEnd) return NULL;
-//    TreeNode* root=new TreeNode(preorder[preStart]);
-//
-//    int inRoot = inMap[root->val];
-//    int numsLeft = inRoot - inStart;
-//    cout<<numsLeft<<" "<<inRoot<<endl;
-//
-//    root->left = build(preorder,preStart-1 , preStart+numsLeft , inorder , inStart , inRoot-1 , inMap);
-//    root->right = build(preorder , preStart+numsLeft+1 , preEnd , inorder , inRoot+1 , inEnd , inMap);
-//
-//    return root;
-//}
-
-int search_(vector<int>&inorder , int start , int end_ , int curr)
+void print(TreeNode *root)
 {
-    for(int i=start ; i<=end_ ; i++){
-        if(inorder[i] == curr)
-            return i;
-    }
-    return -1;
-}
-
-TreeNode* Build(vector<int>&preorder,vector<int>&inorder, int start , int end_)
-{
-    static int idx=0;
-    if(start > end_)
-        return NULL;
-
-    TreeNode * root = new TreeNode(preorder[idx]);
-    idx++;
-
-    int index;
-    for(int i= start;i<=end_; i++){
-        if(inorder[i]==root->val){
-            index=i;
-            break;
-        }
-    }
-
-    root->left = Build(preorder , inorder, start , index-1);
-    root->right = Build(preorder, inorder , index+1 , end_);
-    return root;
-}
-
-TreeNode * buildTree(vector<int>&preorder , vector<int>&inorder)
-{
-    if(preorder.size() == 1){
-        TreeNode* root= new TreeNode(preorder[0]);
-        return root;
-    }
-    TreeNode *root = Build(preorder , inorder , 0 , inorder.size()-1);
-    return root;
-}
-
-void print(TreeNode * root)
-{
-    if(root==NULL) return ;
+    if(!root) return ;
     cout<<root->val<<" ";
     print(root->left);
     print(root->right);
 }
 
+unordered_map<int, int> inorderIndex;
+
+TreeNode *build(int preStart , int preEnd, int inStart, int inEnd , vector<int>&preorder, vector<int>&inorder)
+{
+    if(preStart>preEnd || inStart>inEnd) return nullptr;
+
+    int rotVal = preorder[preStart];
+    TreeNode *root = new TreeNode(rotVal);
+
+    int rootIndexInInorder = inorderIndex[rotVal];
+    int leftTreeSize = rootIndexInInorder - inStart;
+
+    root->left = build(preStart+1, preStart+leftTreeSize, inStart, rootIndexInInorder-1, preorder, inorder);
+    root->right = build(preStart+leftTreeSize+1, preEnd, rootIndexInInorder+1, inEnd, preorder, inorder);
+
+    return root;
+}
+
+TreeNode *buildTree(vector<int>&preorder, vector<int>&inorder)
+{
+    inorderIndex.clear();
+    for(int i=0;i<inorder.size();i++)
+        inorderIndex[inorder[i]]=i;
+
+    return build(0,preorder.size()-1,0,inorder.size()-1,preorder, inorder);
+}
+
 int main()
 {
-    int n;
-    cin>>n;
-    vector<int>preorder;
-    vector<int>inorder;
+    int k;
+    cin>>k;
+    vector<int>preorder(k),inorder(k);
 
-    for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        preorder.push_back(a);
-    }
-    for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        inorder.push_back(a);
-    }
+    for(int i=0;i<k;i++)
+        cin>>preorder[i];
 
-    TreeNode * root=buildTree(preorder,inorder);
+    for(int i=0;i<k;i++)
+        cin>>inorder[i];
 
-    print(root);
+    TreeNode *rot = buildTree(preorder, inorder);
 
+    print(rot);
+    cout<<endl<<endl;
     return 0;
 }
 
 /**
 
-5
-3 9 20 15 7
-9 3 15 20 7
+9
+5 2 1 4 3 8 7 6 10
+1 2 3 4 5 6 7 8 10
 
 */

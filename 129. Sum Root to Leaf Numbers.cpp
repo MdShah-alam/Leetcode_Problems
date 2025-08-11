@@ -23,25 +23,15 @@ void print(TreeNode *root)
     print(root->right);
 }
 
-TreeNode* previousNode = nullptr;
-
-void flatten(TreeNode* root) {
-    if (root == nullptr) return;
-
-    // Process right subtree first
-    flatten(root->right);
-
-    // Process left subtree
-    flatten(root->left);
-
-    // Link current node
-    root->right = previousNode ;
-    root->left = nullptr;
-
-    // Move prev to current node
-    previousNode  = root;
+int sumNumbers(TreeNode* root, int sum=0)
+{
+    if(!root) return 0;
+    if(!root->left && !root->right)
+        return sum+root->val;
+    int result=0;
+    result+=sumNumbers(root->left, (sum+root->val)*10)+sumNumbers(root->right, (sum+root->val)*10);
+    return result;
 }
-
 
 int main()
 {
@@ -65,11 +55,9 @@ int main()
         present->right = n2;
     }
     print(root);
-    cout<<endl<<endl;
-    flatten(root);
-    print(root);
     cout<<endl;
-
+    cout<<sumNumbers(root)<<endl;
+    return 0;
 }
 /**
 
@@ -79,5 +67,5 @@ int main()
 -1 -1 2 -1 6 -1 -1 -1
 -1 -1 -1 -1
 
-
 */
+
