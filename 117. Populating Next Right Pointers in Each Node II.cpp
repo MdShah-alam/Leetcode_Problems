@@ -7,14 +7,38 @@ public:
     int val;
     Node *left;
     Node *right;
-
+    Node *next;
     Node(int val)
     {
         this->val = val;
         this->left = nullptr;
         this->right = nullptr;
+        this->next = nullptr;
     }
 };
+
+Node* connect(Node* root)
+{
+    if(!root) return nullptr;
+    queue<Node*>q;
+    q.push(root);
+    q.push(nullptr);
+
+    while(!q.empty()){
+        Node *present = q.front();
+        q.pop();
+        if(present->left) q.push(present->left);
+        if(present->right) q.push(present->right);
+        Node *x = q.front();
+        present->next = x;
+        if(!x){
+            q.pop();
+            if(!q.empty())
+                q.push(nullptr);
+        }
+    }
+    return root;
+}
 
 void print(Node *root)
 {
@@ -22,24 +46,6 @@ void print(Node *root)
     cout<<root->val<<" ";
     print(root->left);
     print(root->right);
-}
-
-int maxi = INT_MIN;
-int helper(Node *root)
-{
-    if(!root) return 0;
-
-    int leftsum = max(0,helper(root->left));
-    int rightsum = max(0,helper(root->right));
-
-    maxi = max(maxi, root->val+leftsum+rightsum);
-
-    return root->val + max(leftsum , rightsum);
-}
-int maxPathSum(Node* root)
-{
-    helper(root);
-    return maxi;
 }
 
 int main()
@@ -65,7 +71,6 @@ int main()
     }
     print(root);
     cout<<endl;
-    cout<<maxPathSum(root)<<endl;
 }
 /**
 
@@ -75,4 +80,3 @@ int main()
 -1 -1 -1 -1 -1 -1 -1 -1
 
 */
-

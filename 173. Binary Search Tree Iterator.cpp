@@ -24,23 +24,31 @@ void print(Node *root)
     print(root->right);
 }
 
-int maxi = INT_MIN;
-int helper(Node *root)
-{
-    if(!root) return 0;
+class BSTIterator {
+public:
+    stack<TreeNode*>st;
+    BSTIterator(TreeNode* root) {
+        pushAll(root);
+    }
 
-    int leftsum = max(0,helper(root->left));
-    int rightsum = max(0,helper(root->right));
+    int next() {
+        TreeNode *temp = st.top();
+        st.pop();
+        pushAll(temp->right);
+        return temp->val;
+    }
 
-    maxi = max(maxi, root->val+leftsum+rightsum);
-
-    return root->val + max(leftsum , rightsum);
-}
-int maxPathSum(Node* root)
-{
-    helper(root);
-    return maxi;
-}
+    bool hasNext() {
+        return !st.empty();
+    }
+private:
+    void pushAll(TreeNode* node){
+        while(node){
+            st.push(node);
+            node = node->left;
+        }
+    }
+};
 
 int main()
 {
@@ -65,7 +73,6 @@ int main()
     }
     print(root);
     cout<<endl;
-    cout<<maxPathSum(root)<<endl;
 }
 /**
 
@@ -75,4 +82,5 @@ int main()
 -1 -1 -1 -1 -1 -1 -1 -1
 
 */
+
 

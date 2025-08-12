@@ -24,22 +24,19 @@ void print(Node *root)
     print(root->right);
 }
 
-int maxi = INT_MIN;
-int helper(Node *root)
+Node* lowestCommonAncestor(Node* root, Node* p, Node* q)
 {
-    if(!root) return 0;
+    if(!root || root==p || root==q)
+        return root;
+    Node *left = lowestCommonAncestor(root->left, p,q);
+    Node *right = lowestCommonAncestor(root->right,p,q);
 
-    int leftsum = max(0,helper(root->left));
-    int rightsum = max(0,helper(root->right));
-
-    maxi = max(maxi, root->val+leftsum+rightsum);
-
-    return root->val + max(leftsum , rightsum);
-}
-int maxPathSum(Node* root)
-{
-    helper(root);
-    return maxi;
+    if(!left)
+        return right;
+    else if(!right)
+        return left;
+    else
+        return root;
 }
 
 int main()
@@ -65,7 +62,15 @@ int main()
     }
     print(root);
     cout<<endl;
-    cout<<maxPathSum(root)<<endl;
+
+    int x, y;
+    cin>>x>>y;
+    Node *p = new Node(x);
+    Node *a = new Node(y);
+
+    Node *Ancestor = lowestCommonAncestor(root, p,a);
+    cout<<Ancestor->val<<endl;
+    return 0;
 }
 /**
 
@@ -75,4 +80,6 @@ int main()
 -1 -1 -1 -1 -1 -1 -1 -1
 
 */
+
+
 
