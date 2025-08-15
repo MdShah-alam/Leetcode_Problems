@@ -3,20 +3,18 @@ using namespace std;
 
 int maxSubarraySumCircular(vector<int>&v)
 {
-    int total=0;
-    int maxSum=v[0], curMax=0;
-    int minSum=v[0], curMin=0;
-
+    int total = 0;
+    int maxsum=v[0], curMax=0;
+    int minsum=v[0], curMin=0;
     for(int x : v){
-        curMax=max(curMax+x, x);
-        maxSum=max(maxSum, curMax);
-
-        curMin = min(curMin+x , x);
-        minSum = min(minSum , curMin);
+        curMax=max(curMax+x , x);
+        maxsum=max(maxsum,curMax);
+        curMin = min(curMin+x, x);
+        minsum = min(minsum, curMin);
         total+=x;
     }
-    if(maxSum<0) return maxSum;
-    return max(maxSum, total-minSum);
+    if(maxsum<0) return maxsum;
+    return max(maxsum,total-minsum);
 }
 
 int main()
@@ -29,3 +27,9 @@ int main()
     cout<<maxSubarraySumCircular(v)<<endl;
     return 0;
 }
+/**
+
+4
+1 -2 3 -2
+
+*/
