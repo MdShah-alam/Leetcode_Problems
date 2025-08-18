@@ -1,16 +1,18 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<vector<int>>kSmallestPairs(vector<int>&v1, vector<int>&v2, int k)
+vector<vector<int>>kSmallestPairs(vector<int>&a, vector<int>&b, int k)
 {
+    int n = a.size();
     vector<vector<int>>v;
-    int n=v1.size();
     int i=0,j=0;
-    while(i<n && j<n){
-        int sum1=v[i]+v[j];
-        int sum2=v[i+1]+v[j];
-        int sum3=v[i]+v[j+1];
-        if(sum1<sum2){
+    while(k--){
+        if(i==0 && j==0)
+            v.push_back({a[i],b[j]});
+        if(a[i]==b[j]){
+            if(i<n-1 && j<n-1 && a[i+1]>b[j+1])
+                j++;
+            else
 
         }
     }
@@ -20,16 +22,16 @@ int main()
 {
     int n;
     cin>>n;
-    vector<int>v1(n),v2(n);
+    vector<int>a(n),b(n);
     for(int i=0;i<n;i++)
-        cin>>v1[i];
-    for(int i=0;i<n;i+++)
-        cin>>v2[i];
+        cin>>a[i];
+    for(int i=0;i<n;i++)
+        cin>>b[i];
     int k;
     cin>>k;
-    vector<vector<int>>v=kSmallestPairs(v1,v2,k);
-    for(int i=0;v.size();i++){
-        cout<<v[i][0]<<" "<<v[i][1]<<endl;
-    }
+
+    vector<vector<int>> ans = kSmallestPairs(a,b,k);
+    for(int i=0;i<ans.size();i++)
+        cout<<ans[i][0]<<" "<<ans[i][1]<<endl;
     return 0;
 }
