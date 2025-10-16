@@ -3,27 +3,19 @@ using namespace std;
 
 int evalRPN(vector<string>&v)
 {
-    int n=v.size();
     stack<int>st;
-    for(int i=0;i<n;i++){
-        if(v[i]!="+" && v[i]!="-" && v[i]!="*" && v[i]!="/"){
-            st.push(stoi(v[i]));
+    for(string s: v){
+        if(s=="+" || s=="-" || s=="/" || s=="*"){
+            int b = st.top(); st.pop();
+            int a = st.top(); st.pop();
+
+            if(s=="+") st.push(a+b);
+            else if(s=="-") st.push(a-b);
+            else if(s=="*") st.push(a*b);
+            else st.push(a/b);
         }
-        else{
-            int a=st.top();
-            st.pop();
-            int b=st.top();
-            st.pop();
-            if(v[i]=="+"){
-                st.push(a+b);
-            }
-            else if(v[i]=="-")
-                st.push(b-a);
-            else if(v[i]=="*")
-                st.push(a*b);
-            else
-                st.push(b/a);
-        }
+        else
+            st.push(stoi(s));
     }
     return st.top();
 }
@@ -32,15 +24,17 @@ int main()
 {
     int n;
     cin>>n;
-    vector<string>s(n);
+    vector<string>v(n);
+
     for(int i=0;i<n;i++)
-        cin>>s[i];
-    cout<<evalRPN(s)<<endl;
+        cin>>v[i];
+
+    cout<<evalRPN(v)<<endl;
     return 0;
 }
 /**
 
-5
-2 1 + 3 *
+13
+10 6 9 3 + -11 * / * 17 + 5 +
 
 */
