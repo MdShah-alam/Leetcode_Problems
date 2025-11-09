@@ -1,72 +1,58 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int visited[10000];
-vector<int>adj_list[10000];
-bool cycle_detected(int node)
+bool cycle(int i, vector<vector<int>>&adj, vector<int>&visited, vector<int>&pathVis)
 {
-    visited[node]=1;
-    for(int adj_node:adj_list[node])
-    {
-        if(visited[adj_node]==0)
-        {
-            bool get_cycle=cycle_detected(adj_node);
-            if(get_cycle)
+    visited[i]=1;
+    pathVis[i]=1;
+
+    for(int x : adj[i]){
+        if(!visited[x]){
+            if(cycle(x,adj, visited, pathVis))
                 return true;
         }
-        else if(visited[adj_node]==1)
+        else if(pathVis[x])
             return true;
     }
-    visited[node]=2;
+    pathVis[i]=0;
     return false;
 }
-bool canFinish(int numCourses, vector<vector<int>>& prerequisites)
+bool canFinish(int n, vector<vector<int>>& v)
 {
-    for(auto it : prerequisites)
-    {
-        int u=it[0];
-        int v=it[1];
-        adj_list[u].push_back(v);
-    }
-    for(int i=0; i<numCourses; i++)
-        visited[i]=0;
+    vector<vector<int>>adj(n);
+    vector<int>visited(n,0);
+    vector<int>pathVis(n,0);
 
-    bool cycle=false;
-    for(int i=0; i<numCourses; i++)
-    {
-        if(visited[i]==0)
-        {
-            bool get_cycle=cycle_detected(i);
-            if(get_cycle)
+    for(auto & edge : v){
+        adj[edge[1]].push_back(edge[0]);
+    }
+    for(int i=0;i<n;i++){
+        if(visited[i]==0){
+            if(cycle(i,adj,visited,pathVis))
                 return false;
         }
     }
     return true;
 }
-
 int main()
 {
-    int n;
-    cin>>n;
-    int a,b;
-    cin>>a>>b;
-    vector<vector<int>>v(a, vector<int>(b));
-    for(int i=0; i<a; i++)
-    {
-        for(int j=0; j<b; j++)
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>>v(m,vector<int>(2));
+    for(int i=0;i<m;i++){
+        for(int j=0;j<2;j++)
             cin>>v[i][j];
     }
     cout<<canFinish(n,v)<<endl;
+    return 0;
 }
-
 /**
 
-4
-4
-2
+2 2
 1 0
-2 0
-3 1
-3 2
+0 1
+
+2 1
+1 0
 
 */
