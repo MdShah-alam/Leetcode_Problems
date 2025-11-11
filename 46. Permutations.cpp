@@ -1,29 +1,29 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void backtrack(vector<vector<int>>&res, vector<int>&k, vector<int>&v, vector<bool>&used)
+void calculate(vector<int>&v, int n, vector<vector<int>>&ans, vector<int>&d, vector<bool>&used)
 {
-    if(v.size() == k.size()){
-        res.push_back(k);
+    if(d.size()==n){
+        ans.push_back(d);
         return ;
     }
-
-    for(int i=0;i<v.size();i++){
+    for(int i=0;i<n;i++){
         if(used[i]) continue;
         used[i]=true;
-        k.push_back(v[i]);
-        backtrack(res, k,v,used);
-        k.pop_back();
+        d.push_back(v[i]);
+        calculate(v,n,ans,d,used);
+        d.pop_back();
         used[i]=false;
     }
 }
 vector<vector<int>>permute(vector<int>&v)
 {
-    vector<vector<int>>res;
-    vector<int>k;
-    vector<bool>used(v.size(),false);
-    backtrack(res,k,v,used);
-    return res;
+    int n = v.size();
+    vector<vector<int>>ans;
+    vector<int>demo;
+    vector<bool>used(n, false);
+    calculate(v,n,ans,demo,used);
+    return ans;
 }
 
 int main()
@@ -31,15 +31,13 @@ int main()
     int n;
     cin>>n;
     vector<int>v(n);
-
     for(int i=0;i<n;i++)
         cin>>v[i];
+    vector<vector<int>>x = permute(v);
 
-    vector<vector<int>>res = permute(v);
-
-    for(vector<int>k : res){
-        for(int x : k)
-            cout<<x<<" ";
+    for(vector<int>k : x){
+        for(int a : k)
+            cout<<a<<" ";
         cout<<endl;
     }
     return 0;

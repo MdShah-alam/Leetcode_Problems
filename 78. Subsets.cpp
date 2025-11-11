@@ -1,41 +1,33 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<vector<int>> subsets(vector<int>& v)
+vector<vector<int>>subsets(vector<int>&v)
 {
-    sort(v.begin(),v.end());
-    vector<vector<int>>vv;
-    int n=v.size();
-    for(int i=0;i<(1<<n);i++){
-        vector<int>k;
+    vector<vector<int>>ans;
+    ans.push_back({});
+    for(int i=0;i<v.size();i++){
+        int n = ans.size();
         for(int j=0;j<n;j++){
-            if((1<<j)&i)
-                k.push_back(v[j]);
+            vector<int>curr = ans[j];
+            curr.push_back(v[i]);
+            ans.push_back(curr);
         }
-        if (find(vv.begin(), vv.end(), k) == vv.end() )
-            vv.push_back(k);
     }
-
-    return vv;
+    return ans;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    vector<int>v;
+    vector<int>v(n);
     for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        v.push_back(a);
+        cin>>v[i];
     }
-    vector<vector<int>> vv = subsets(v);
-
-    for(int i=0;i<vv.size();i++){
-        for(int j=0;j<vv[i].size();j++)
-            cout<<vv[i][j]<<" ";
+    vector<vector<int>> k = subsets(v);
+    for(vector<int>x : k){
+        for(int y : x)
+            cout<<y<<" ";
         cout<<endl;
     }
-
-    return 0;
 }
