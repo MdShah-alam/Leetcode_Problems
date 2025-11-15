@@ -1,29 +1,24 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool dfs(vector<vector<char>>&v, string s, int i,int j, int cont)
+bool dfs(vector<vector<char>>board, string word, int i, int j, int k)
 {
-    if(cont==s.size())
-        return true;
-
-    if(i>=v.size()||i<0||j>=v[0].size()||j<0||s[cont]!=v[i][j])
+    if(k==word.size()) return true;
+    if(i<0||j<0 ||i>=board.size()||j>=board[0].size()||board[i][j]!=word[k])
         return false;
-
-    char temp = v[i][j];
-    v[i][j]='*';
-
-    bool isFound = dfs(v,s,i+1,j,cont+1)||dfs(v,s,i-1,j,cont+1)||dfs(v,s,i,j+1,cont+1)||dfs(v,s,i,j-1,cont+1);
-
-    v[i][j]=temp;
+    char temp = board[i][j];
+    board[i][j]='*';
+    bool isFound = dfs(board,word,i+1,j,k+1)||dfs(board,word,i-1,j,k+1)||dfs(board,word,i,j+1,k+1)||dfs(board,word,i,j-1,k+1);
+    board[i][j]=temp;
     return isFound;
 }
 bool exist(vector<vector<char>>& board, string word)
 {
-    int n=board.size();
-    int m=board[0].size();
+    int n = board.size();
+    int m = board[0].size();
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
-            if(word[0]==board[i][j] && dfs(board, word, i,j,0))
+            if(board[i][j]==word[0] && dfs(board,word,i,j,0))
                 return true;
         }
     }
@@ -35,30 +30,21 @@ int main()
     int n,m;
     cin>>n>>m;
     vector<vector<char>>v(n,vector<char>(m));
-
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++)
             cin>>v[i][j];
     }
-
-    string word;
-    cin>>word;
-    cout<<exist(v,word)<<endl;
-
+    string s;
+    cin>>s;
+    cout<<exist(v,s)<<endl;
     return 0;
 }
 /**
 
-3 4
+4 3
 A B C E
 S F C S
 A D E E
-ABCCED
-
-3 4
-A B C E
-S F C S
-A D E E
-ABCB
+SEE
 
 */
