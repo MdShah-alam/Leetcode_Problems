@@ -9,71 +9,49 @@ public:
     ListNode(int val)
     {
         this->val = val;
-        this->next = nullptr;
+        this->next = NULL;
     }
 };
+ListNode* reverseKGroup(ListNode* head, int k)
+{
+    if(!head || k==1) return head;
+    ListNode dummy(0);
+    dummy.next = head;
 
-ListNode *insert_at_tail(ListNode *head , int val)
+    ListNode *prev = &dummy , *curr = &dummy, *next = &dummy;
+    int cont = 0;
+    curr = head;
+
+    while(curr){
+        cont++;
+        curr = curr->next;
+    }
+
+    while(cont >= k){
+        curr = prev->next;
+        next = curr->next;
+        for(int i=1;i<k;i++){
+            curr->next = next->next;
+            next->next = prev->next;
+            prev->next = next;
+            next = curr->next;
+        }
+        prev = curr;
+        cont -= k;
+    }
+    return dummy.next;
+}
+
+ListNode *insert_at_tail(ListNode *head, int val)
 {
     ListNode *newNode = new ListNode(val);
-    if(head == nullptr) return newNode;
-
+    if(!head) return newNode;
     ListNode *temp = head;
-    while(temp->next!=nullptr)
+    while(temp->next!=NULL)
         temp = temp->next;
-
     temp->next = newNode;
     return head;
 }
-ListNode *getKthNode(ListNode *temp , int k)
-{
-    k-=1;
-    while(temp!=nullptr && k>0){
-        k--;
-        temp = temp->next;
-    }
-    return temp;
-}
-void reverseSegment(ListNode* &start, ListNode* end) {
-    ListNode* prev = nullptr;
-    ListNode* curr = start;
-    ListNode* stop = end->next;
-
-    while (curr != stop) {
-        ListNode* next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }
-    start = prev;
-}
-
-ListNode* reverseKGroup(ListNode* head, int k) {
-    ListNode *temp = head;
-    ListNode *prevList = nullptr;
-
-    while (temp) {
-        ListNode *kthnode = getKthNode(temp, k);
-        if (!kthnode) {
-            if (prevList) prevList->next = temp;
-            break;
-        }
-        ListNode *nextNode = kthnode->next;
-        ListNode* tail = temp;
-        reverseSegment(temp, kthnode);
-
-        if (!prevList)
-            head = kthnode;
-        else
-            prevList->next = kthnode;
-
-        tail->next = nextNode;
-        prevList = tail;
-        temp = nextNode;
-    }
-    return head;
-}
-
 void print(ListNode *head)
 {
     ListNode *temp = head;
@@ -83,27 +61,21 @@ void print(ListNode *head)
     }
     cout<<endl;
 }
-
 int main()
 {
     int n;
     cin>>n;
-    ListNode *head = nullptr;
+    ListNode *head = NULL;
     for(int i=0;i<n;i++){
         int a;
         cin>>a;
         head = insert_at_tail(head, a);
     }
     print(head);
-    head = reverseKGroup(head , 4);
-    print(head);
+    int k;
+    cin>>k;
+    ListNode *head1 = reverseKGroup(head, k);
+    print(head1);
 
     return 0;
 }
-
-/**
-
-10
-1 2 3 4 5 6 7 8 9 10
-
-*/
