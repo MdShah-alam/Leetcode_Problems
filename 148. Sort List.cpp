@@ -5,93 +5,90 @@ class ListNode
 {
 public:
     int val;
-    ListNode *next;
+    ListNode* next;
     ListNode(int val)
     {
         this->val = val;
-        this->next = nullptr;
+        this->next = NULL;
     }
 };
 
-ListNode *insert_at_tail(ListNode *head, int val)
+ListNode *insert_at_tail(int val , ListNode* head)
 {
-    ListNode *newNode = new ListNode(val);
+    ListNode* newNode = new ListNode(val);
     if(!head) return newNode;
-
-    ListNode *temp = head;
+    ListNode *temp=head;
     while(temp->next)
         temp = temp->next;
     temp->next = newNode;
     return head;
 }
 
-void print(ListNode *head)
+ListNode *getMid(ListNode *head)
 {
-    ListNode *temp = head;
-    while(temp){
-        cout<<temp->val<<" ";
-        temp = temp->next;
-    }
-    cout<<endl;
-}
-
-ListNode *findMiddle(ListNode *head)
-{
+    if(!head || !head->next) return head;
     ListNode *slow = head;
-    ListNode *fast = head->next;
+    ListNode *fast = head;
+    ListNode *prev = NULL;
     while(fast && fast->next){
+        prev = slow;
         slow = slow->next;
         fast = fast->next->next;
     }
-    return slow;
+    return prev;
 }
-ListNode *mergeTwoLists(ListNode *l1 , ListNode *l2)
+ListNode *merge(ListNode *l, ListNode *r)
 {
-    ListNode *dummyNode = new ListNode(-1);
-    ListNode *temp = dummyNode;
-    while(l1 && l2){
-        if(l1->val < l2->val){
-            temp->next = l1;
-            temp = l1;
-            l1 = l1->next;
+    ListNode dummy(0);
+    ListNode *temp = &dummy;
+    while(l && r){
+        if(l->val < r->val){
+            temp->next = l;
+            temp = temp->next;
+            l = l->next;
         }
         else{
-            temp->next = l2;
-            temp = l2;
-            l2 = l2->next;
+            temp->next =r;
+            temp = temp->next;
+            r = r->next;
         }
     }
-    if(l1) temp->next = l1;
-    else temp->next = l2;
-    return dummyNode->next;
+    temp->next = l ? l:r;
+    return dummy.next;
 }
 ListNode* sortList(ListNode* head)
 {
     if(!head || !head->next) return head;
+    ListNode *mid = getMid(head);
+    if(!mid) return head;
+    ListNode *left = head;
+    ListNode *right = mid->next;
+    mid->next = NULL;
+    left = sortList(left);
+    right = sortList(right);
+    return merge(left, right);
+}
 
-    ListNode *middle = findMiddle(head);
-    ListNode *righthead = middle->next;
-    middle->next = nullptr;
-    ListNode *lefthead = head;
-
-    lefthead = sortList(lefthead);
-    righthead = sortList(righthead);
-    return mergeTwoLists(lefthead , righthead);
+void print(ListNode *head)
+{
+    while(head){
+        cout<<head->val<<" ";
+        head=head->next;
+    }
+    cout<<endl;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    ListNode *head = nullptr;
+    ListNode *head = NULL;
     for(int i=0;i<n;i++){
         int a;
         cin>>a;
-        head = insert_at_tail(head, a);
+        head = insert_at_tail(a,head);
     }
     print(head);
-    head = sortList(head);
-    print(head);
-
-    return 0;
+    ListNode *had = sortList(head);
+    print(had);
 }

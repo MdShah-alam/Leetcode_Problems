@@ -1,11 +1,11 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void merge(vector<int>&v, int st , int mid, int ed)
+void merge(vector<int>&v, int st, int mid, int ed)
 {
+    int i=st;
     vector<int>temp;
-    int i = st;
-    int j = mid+1;
+    int j=mid+1;
     while(i<=mid && j<=ed){
         if(v[i]<v[j]){
             temp.push_back(v[i]);
@@ -24,18 +24,25 @@ void merge(vector<int>&v, int st , int mid, int ed)
         temp.push_back(v[j]);
         j++;
     }
-    for(int index = 0; index<temp.size();index++)
-        v[index+st] = temp[index];
-}
-
-void mergeSort(vector<int>&v, int s, int e)
-{
-    if(s<e){
-        int m = s + (e-s)/2;
-        mergeSort(v, s, m);
-        mergeSort(v, m+1, e);
-        merge(v, s,m, e);
+    for(int idx=0;idx<temp.size();idx++){
+        v[st]=temp[idx];
+        st++;
     }
+}
+void margeSort(vector<int>&v, int l, int r)
+{
+    if(l<r){
+        int mid = l+(r-l)/2;
+        margeSort(v,l,mid);
+        margeSort(v,mid+1,r);
+        merge(v,l,mid,r);
+    }
+}
+void marge(vector<int>&v)
+{
+    int n = v.size();
+    int l=0, r=n-1;
+    margeSort(v,l,r);
 }
 
 int main()
@@ -46,10 +53,11 @@ int main()
     for(int i=0;i<n;i++)
         cin>>v[i];
 
-    mergeSort(v,0,n-1);
-    for(int x: v)
-        cout<<x<<" ";
-    cout<<endl;
+    marge(v);
 
+    for(int i=0;i<v.size();i++)
+        cout<<v[i]<<" ";
+    cout<<endl;
     return 0;
 }
+

@@ -3,15 +3,14 @@ using namespace std;
 
 int findPeakElement(vector<int>&v)
 {
-    int left=0, right=v.size()-1;
-    while(left<right){
-        int mid = left+(right-left)/2;
-        if(v[mid]>v[mid+1])
-            right=mid;
-        else
-            left=mid+1;
+    int n = v.size();
+    int i=0, j=n-1;
+    while(i<j){
+        int m = i+(j-i)/2;
+        if(v[m]>v[m+1]) j = m;
+        else i = m+1;
     }
-    return left;
+    return i;
 }
 
 int main()
@@ -23,5 +22,10 @@ int main()
         cin>>v[i];
 
     cout<<findPeakElement(v)<<endl;
-    return 0;
 }
+/**
+
+7
+1 2 1 3 5 6 4
+
+*/
