@@ -1,28 +1,28 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void calculate(vector<int>&v, int n, vector<vector<int>>&ans, vector<int>&d, vector<bool>&used)
+void Find(vector<int>v,int n,vector<vector<int>>&ans, vector<int>&state,vector<bool>&used)
 {
-    if(d.size()==n){
-        ans.push_back(d);
+    if(state.size()==n){
+        ans.push_back(state);
         return ;
     }
     for(int i=0;i<n;i++){
-        if(used[i]) continue;
+        if(used[i]==true) continue;
+        state.push_back(v[i]);
         used[i]=true;
-        d.push_back(v[i]);
-        calculate(v,n,ans,d,used);
-        d.pop_back();
+        Find(v,n,ans,state,used);
+        state.pop_back();
         used[i]=false;
     }
 }
 vector<vector<int>>permute(vector<int>&v)
 {
     int n = v.size();
-    vector<vector<int>>ans;
     vector<int>demo;
-    vector<bool>used(n, false);
-    calculate(v,n,ans,demo,used);
+    vector<vector<int>>ans;
+    vector<bool>used(n,false);
+    Find(v,n,ans,demo, used);
     return ans;
 }
 
@@ -33,11 +33,10 @@ int main()
     vector<int>v(n);
     for(int i=0;i<n;i++)
         cin>>v[i];
-    vector<vector<int>>x = permute(v);
-
-    for(vector<int>k : x){
-        for(int a : k)
-            cout<<a<<" ";
+    vector<vector<int>>result = permute(v);
+    for(vector<int>k : result){
+        for(int x : k)
+            cout<<x<<" ";
         cout<<endl;
     }
     return 0;
