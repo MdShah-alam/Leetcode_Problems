@@ -3,47 +3,39 @@ using namespace std;
 
 string minWindow(string s, string t)
 {
-    if(s.size()<t.size()) return "";
-
-    unordered_map<char, int>have, need;
-    for(char ch : t) need[ch]++;
-
-    int haveCount = 0, needCount = need.size();
-    int left=0, minLen = INT_MAX, start=0;
-
-    for(int right=0;right<s.size();right++){
-        char chs = s[right];
-        have[chs]++;
-
-        if(need.count(chs) && have[chs]==need[chs])
-            haveCount++;
-
-        while(haveCount == needCount){
-            if(right-left+1<minLen){
-                minLen = right-left+1;
-                start = left;
+    string ans="";
+    int n=s.size(),m=t.size();
+    if(n<m) return ans;
+    unordered_map<char,int>mp;
+    for(int i=0;i<m;i++)
+        mp[t[i]]++;
+    unordered_map<char,int>demo=mp;
+    int i=0,j=0,cont=0,start=0,len=INT_MAX;
+    while(j<n){
+        if(mp[s[j]]>0)cont++;
+        mp[s[j]]--;
+        while(cont==m){
+            if(len>(j-i+1)){
+                len=j-i+1;
+                start=i;
             }
-
-            char lc = s[left];
-            have[lc]--;
-            if(need.count(lc) && have[lc] < need[lc])
-                haveCount--;
-            left++;
+            char ch = s[i];
+            mp[ch]++;
+            if(demo.find(ch)!=demo.end() && demo[ch]==mp[ch])
+                cont--;
+            i++;
         }
+        j++;
     }
-    return (minLen == INT_MAX) ? "" : s.substr(start, minLen);
+    return s.substr(start, len);
 }
 
+//      ADOBECODEBANC
+//         ABC
 int main()
 {
-    string s, t;
+    string s,t;
     cin>>s>>t;
     cout<<minWindow(s,t)<<endl;
     return 0;
 }
-/**
-
-ADOBECODEBANC
-ABC
-
-*/
