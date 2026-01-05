@@ -1,21 +1,20 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int evalRPN(vector<string>&v)
+int evalRPN(vector<string>& v)
 {
     stack<int>st;
     for(string s: v){
-        if(s=="+" || s=="-" || s=="/" || s=="*"){
-            int b = st.top(); st.pop();
-            int a = st.top(); st.pop();
-
-            if(s=="+") st.push(a+b);
-            else if(s=="-") st.push(a-b);
-            else if(s=="*") st.push(a*b);
-            else st.push(a/b);
-        }
-        else
+        if(s!="+" && s!="-" && s!="*" && s!="/")
             st.push(stoi(s));
+        else{
+            int a=st.top();st.pop();
+            int b=st.top();st.pop();
+            if(s=="+") st.push(a+b);
+            else if(s=="-") st.push(b-a);
+            else if(s=="*") st.push(b*a);
+            else st.push(b/a);
+        }
     }
     return st.top();
 }
@@ -25,10 +24,8 @@ int main()
     int n;
     cin>>n;
     vector<string>v(n);
-
     for(int i=0;i<n;i++)
         cin>>v[i];
-
     cout<<evalRPN(v)<<endl;
     return 0;
 }

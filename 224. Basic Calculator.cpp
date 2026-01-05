@@ -1,45 +1,42 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int calculate(string s) {
-    stack<int> st;
-    int result = 0;
-    int sign = 1;
-    int num = 0;
-
-    for (int i = 0; i < s.size(); i++) {
-        char ch = s[i];
-
-        if (isdigit(ch)) {
-            num = num * 10 + (ch - '0');
-        } else if (ch == '+') {
-            result += sign * num;
-            num = 0;
-            sign = 1;
-        } else if (ch == '-') {
-            result += sign * num;
-            num = 0;
-            sign = -1;
-        } else if (ch == '(') {
-            // Push current result and sign to stack
-            st.push(result);
+int calculate(string s)
+{
+    stack<int>st;
+    int cur=0,res=0,sign=1;
+    for(char ch : s){
+        if(isdigit(ch)){
+            cur = cur*10 + (ch - '0');
+        }
+        else if(ch=='+' || ch=='-'){
+            res+=sign*cur;
+            sign = (ch == '-') ? -1 : 1;
+            cur=0;
+        }
+        else if(ch=='('){
+            st.push(res);
             st.push(sign);
-            result = 0;
-            sign = 1;
-        } else if (ch == ')') {
-            result += sign * num;
-            num = 0;
-            result *= st.top(); st.pop(); // Multiply by sign
-            result += st.top(); st.pop(); // Add to previous result
+            sign=1;
+            res=0;
+        }
+        else if(ch==')'){
+            res+=sign*cur;
+            res*=st.top();
+            st.pop();
+            res+=st.top();
+            st.pop();
+            cur=0;
         }
     }
-    result += sign * num;
-    return result;
+    res += sign * cur; // last number
+    return res;
 }
 
-int main() {
+int main()
+{
     string s;
-    getline(cin, s);
-    cout << calculate(s) << endl;
+    cin>>s;
+    cout<<calculate(s)<<endl;
     return 0;
 }
