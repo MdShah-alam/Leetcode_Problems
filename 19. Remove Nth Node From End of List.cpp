@@ -1,81 +1,87 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node
+class ListNode
 {
 public:
     int val;
-    Node *next;
-
-    Node(int val)
+    ListNode *next;
+    ListNode(int x)
     {
-        this->val=val;
-        next=NULL;
+        this->val=x;
+        this->next = NULL;
     }
 };
 
-Node * insert_at_tail(Node *&head , int val)
+ListNode *insert_ta_tail(ListNode *head, int x)
 {
-    Node *newnode = new Node(val);
-
-    if(head==NULL){
-        head=newnode;
-        return head;
-    }
-    Node *temp=head;
-    while(temp->next!=NULL){
-        temp=temp->next;
-    }
-    temp->next=newnode;
+    ListNode *newNode = new ListNode(x);
+    if(!head) return newNode;
+    ListNode *temp=head;
+    while(temp->next!=NULL)
+        temp = temp->next;
+    temp->next = newNode;
     return head;
 }
-
-Node * delete_nth_node(Node *&head , int n)
+void print(ListNode *head)
 {
-    Node * dummy = new Node(0);
-    dummy->next=head;
-    Node * left=dummy;
-    Node * right=head;
-
-    while(n>0 && right!=NULL){
-        right=right->next;
-        n--;
+    while(head){
+        cout<<head->val<<" ";
+        head = head->next;
     }
-    while(right!=NULL){
-        left=left->next;
-        right=right->next;
-    }
-    left->next=left->next->next;
-    return dummy->next;
+    cout<<endl;
 }
 
-void printList(Node *head)
+ListNode* removeNthFromEnd(ListNode* head, int n)
 {
-    Node *temp=head;
-    while(temp!=NULL){
+    if(!head) return head;
+    int m=0;
+    ListNode *temp = head;
+    while(temp){
+        m++;
         cout<<temp->val<<" ";
-        temp=temp->next;
+        temp = temp->next;
     }
+    cout<<endl;
+    n = m - n;
+    cout<<n<<" "<<m<<endl;
+    if(n==0) return head->next;
+    int x=0;
+    ListNode *prev = nullptr, *curr = head;
+    while(x!=n && curr){
+        x++;
+        prev = curr;
+        cout<<curr->val<<" ";
+        curr = curr->next;
+    }
+    cout<<endl;
+    if(curr->next) prev->next = curr->next;
+    else prev->next = nullptr;
+    delete(curr);
+    return head;
 }
 
 int main()
 {
     int n;
     cin>>n;
-    Node *head=NULL;
+    ListNode *head = NULL;
     for(int i=0;i<n;i++){
-        int a;
-        cin>>a;
-        head=insert_at_tail(head,a);
+        int x;
+        cin>>x;
+        head = insert_ta_tail(head,x);
     }
-
-    printList(head);
-    cout<<endl;
-
-    int a;
-    cin>>a;
-
-    Node * head1=delete_nth_node(head,a);
-    printList(head1);
+    print(head);
+    int k;
+    cin>>k;
+    ListNode* hed = removeNthFromEnd(head,k);
+    print(hed);
     return 0;
 }
+/**
+
+5
+1 2 3 4 5
+
+
+*/
