@@ -1,83 +1,82 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class TreeNode
+class Node
 {
 public:
     int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int val)
+    Node *left;
+    Node *right;
+    Node *next;
+    Node(int val)
     {
         this->val = val;
         this->left = nullptr;
         this->right = nullptr;
+        this->next = nullptr;
     }
 };
 
-void print(TreeNode *root)
+Node* connect(Node* root)
 {
-    if(!root) return;
+    if(!root) return nullptr;
+    queue<Node*>q;
+    q.push(root);
+    q.push(nullptr);
+    while(!q.empty()){
+        Node *node = q.front();
+        q.pop();
+        while(node!=nullptr){
+            if(node->left) q.push(node->left);
+            if(node->right) q.push(node->right);
+            node->next = q.front();
+            node = q.front();
+            q.pop();
+        }
+        if(!q.empty())
+            q.push(nullptr);
+    }
+    return root;
+}
+
+void print(Node *root)
+{
+    if(!root) return ;
     cout<<root->val<<" ";
     print(root->left);
     print(root->right);
 }
-
-TreeNode* previousNode = nullptr;
-
-void flatten(TreeNode* root) {
-    if (root == nullptr) return;
-
-    // Process right subtree first
-    flatten(root->right);
-
-    // Process left subtree
-    flatten(root->left);
-
-    // Link current node
-    root->right = previousNode ;
-    root->left = nullptr;
-
-    // Move prev to current node
-    previousNode  = root;
-}
-
-
 int main()
 {
     int n;
     cin>>n;
-    TreeNode *root = new TreeNode(n);
-    queue<TreeNode*>q;
+    Node *root = new Node(n);
+    queue<Node*>q;
     q.push(root);
-
     while(!q.empty()){
-        TreeNode *present = q.front();
+        Node *node = q.front();
         q.pop();
         int x, y;
         cin>>x>>y;
-        TreeNode *n1 = nullptr, *n2 = nullptr;
-        if(x!=-1) n1 = new TreeNode(x);
-        if(y!=-1) n2 = new TreeNode(y);
+        Node *n1 = nullptr, *n2 = nullptr;
+        if(x!=-1) n1 = new Node(x);
+        if(y!=-1) n2 = new Node(y);
         if(n1) q.push(n1);
         if(n2) q.push(n2);
-        present->left = n1;
-        present->right = n2;
+        node->left = n1;
+        node->right = n2;
     }
-    print(root);
-    cout<<endl<<endl;
-    flatten(root);
     print(root);
     cout<<endl;
 
+
+    return 0;
 }
 /**
 
 5
 2 8
-1 4 7 9
--1 -1 2 -1 6 -1 -1 -1
--1 -1 -1 -1
-
+1 3 6 9
+-1 -1 -1 -1 -1 -1 -1 -1
 
 */

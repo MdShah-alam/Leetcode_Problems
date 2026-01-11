@@ -15,64 +15,51 @@ public:
     }
 };
 
+TreeNode *check(vector<int>&pre,int preStart,int preEnd, vector<int>&in,int inStart,int inEnd,unordered_map<int,int>&mp)
+{
+    if(preStart>preEnd || inStart>inEnd) return nullptr;
+    int x = pre[preStart];
+    TreeNode *root = new TreeNode(x);
+    int inRoot = mp[x];
+    int numsLeft = inRoot - inStart;
+    root->left = check(pre,preStart+1, preStart+numsLeft, in, inStart, inRoot-1,mp);
+    root->right = check(pre, preStart+1+numsLeft, preEnd,in,inRoot+1,inEnd, mp);
+    return root;
+}
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder)
+{
+    if(preorder.size()==0) return nullptr;
+    unordered_map<int,int>mp;
+    for(int i=0;i<inorder.size();i++)
+        mp[inorder[i]]=i;
+    return check(preorder,0,preorder.size()-1,inorder,0,inorder.size()-1,mp);
+}
+
 void print(TreeNode *root)
 {
     if(!root) return ;
-    cout<<root->val<<" ";
     print(root->left);
+    cout<<root->val<<" ";
     print(root->right);
 }
-
-unordered_map<int, int> inorderIndex;
-
-TreeNode *build(int preStart , int preEnd, int inStart, int inEnd , vector<int>&preorder, vector<int>&inorder)
-{
-    if(preStart>preEnd || inStart>inEnd) return nullptr;
-
-    int rotVal = preorder[preStart];
-    TreeNode *root = new TreeNode(rotVal);
-
-    int rootIndexInInorder = inorderIndex[rotVal];
-    int leftTreeSize = rootIndexInInorder - inStart;
-
-    root->left = build(preStart+1, preStart+leftTreeSize, inStart, rootIndexInInorder-1, preorder, inorder);
-    root->right = build(preStart+leftTreeSize+1, preEnd, rootIndexInInorder+1, inEnd, preorder, inorder);
-
-    return root;
-}
-
-TreeNode *buildTree(vector<int>&preorder, vector<int>&inorder)
-{
-    inorderIndex.clear();
-    for(int i=0;i<inorder.size();i++)
-        inorderIndex[inorder[i]]=i;
-
-    return build(0,preorder.size()-1,0,inorder.size()-1,preorder, inorder);
-}
-
 int main()
 {
-    int k;
-    cin>>k;
-    vector<int>preorder(k),inorder(k);
-
-    for(int i=0;i<k;i++)
-        cin>>preorder[i];
-
-    for(int i=0;i<k;i++)
-        cin>>inorder[i];
-
-    TreeNode *rot = buildTree(preorder, inorder);
-
-    print(rot);
-    cout<<endl<<endl;
+    int n;
+    cin>>n;
+    vector<int>in(n),pre(n);
+    for(int i=0;i<n;i++)
+        cin>>in[i];
+    for(int i=0;i<n;i++)
+        cin>>pre[i];
+    TreeNode *root = buildTree(pre , in);
+    print(root);
     return 0;
 }
-
 /**
 
-9
-5 2 1 4 3 8 7 6 10
-1 2 3 4 5 6 7 8 10
+5
+9 3 15 20 7
+3 9 20 15 7
+
 
 */

@@ -1,46 +1,46 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<string>ans;
-void helper(int idx, string digits, unordered_map<char,string>mp, string cur_str)
+vector<string>res;
+void helper(int i,string s,unordered_map<char,string>mp,string &curr)
 {
-    if(idx==digits.size()){
-        ans.push_back(cur_str);
+    if(i==s.size()){
+        res.push_back(curr);
         return ;
     }
-    char ch = digits[idx];
-    for(char letter : mp[ch]){
-        cur_str+=letter;
-        helper(idx+1,digits,mp, cur_str);
-        cur_str.pop_back();
+    char ch = s[i];
+    for(char l : mp[ch]){
+        curr+=l;
+        helper(i+1,s,mp,curr);
+        curr.pop_back();
     }
 }
-vector<string> letterCombinations(string digits)
+//digits = "23"
+//Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+vector<string> letterCombinations(string s)
 {
-    if(digits == "") return ans;
-
+    if(s=="") return res;
     unordered_map<char,string>mp;
-    mp['2'] = "abc";
-    mp['3'] = "def";
-    mp['4'] = "ghi";
-    mp['5'] = "jkl";
-    mp['6'] = "mno";
-    mp['7'] = "pqrs";
-    mp['8'] = "tuv";
-    mp['9'] = "wxyz";
-
-    string cur_str="";
-    helper(0,digits, mp, cur_str);
-    return ans;
+    mp['2']="abc";
+    mp['3']="def";
+    mp['4']="ghi";
+    mp['5']="jkl";
+    mp['6']="mno";
+    mp['7']="pqrs";
+    mp['8']="tuv";
+    mp['9']="wxyz";
+    string curr="";
+    helper(0,s,mp,curr);
+    return res;
 }
 
 int main()
 {
     string s;
     cin>>s;
-    vector<string>v = letterCombinations(s);
-    for(string s : v)
-        cout<<s<<" ";
+    vector<string>ans = letterCombinations(s);
+    for(string sk : ans)
+        cout<<sk<<" ";
     cout<<endl;
     return 0;
 }
